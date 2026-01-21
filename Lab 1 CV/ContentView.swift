@@ -11,16 +11,19 @@ import SwiftData
 struct ProfileHeaderView: View {
     let imageName: String
     let name: String
-    let role: String
     let city: String
         
     var body: some View {
         VStack(alignment: .center, spacing: 0){
             Image(imageName).resizable().aspectRatio(contentMode: .fill).frame(width: 100, height: 100).clipShape(Circle())
             Text(name).font(.largeTitle).bold()
-            Text(role).font(.title2)
-            Text(city).font(.title3)
-        }
+            HStack{
+                Text(city).font(.title2)
+                Text("🇸🇬")
+            }
+            
+        }.padding(30)
+            .background(RoundedRectangle(cornerRadius: 16).fill(.teal.opacity(0.35)))
     }
 }
 
@@ -47,39 +50,52 @@ struct ContentView: View {
             ProfileHeaderView(
                 imageName: "asdf",
                 name: "Kevin Lim",
-                role: "iOS Student",
-                city: "City: Singapore"
+                city: "Singapore"
             )
+            
+            Divider()
             
             VStack(spacing: 12){
                 NavigationSplitView {
                     Text("List of previous workplace/school")
                     List {
                         NavigationLink {
-                            Text("North View Primary School")
-                        } label: {
-                            Text("Primary School")
-                        }
-                        NavigationLink {
-                            Text("Presbyterian High School")
-                        } label: {
-                            Text("Secondary School")
-                        }
-                        NavigationLink {
-                            Text("North View Primary School")
-                        } label: {
-                            Text("High Sch")
-                        }
-                        
-                        
-                        ForEach(items) { item in
-                            NavigationLink {
-                                Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                            } label: {
-                                Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                            List{
+                                NavigationLink {
+                                    Text("North View Primary School")
+                                } label: {
+                                    Text("Age 7 - 12")
+                                }
+                                NavigationLink {
+                                    Text("Presbyterian High School")
+                                } label: {
+                                    Text("Age 13 - 16")
+                                }
+                                NavigationLink {
+                                    Text("Ngee Ann Polytechnic")
+                                } label: {
+                                    Text("Age 17 - 19")
+                                }
+                                NavigationLink {
+                                    Text("Nanyang Technological University")
+                                } label: {
+                                    Text("Age 22 - Current")
+                                }
                             }
+                        } label: {
+                            Text("Previous Schools")
                         }
-                        .onDelete(perform: deleteItems)
+                        
+                        NavigationLink {
+                            List{
+                                Text("9S Seafood Automation Developer")
+                                Text("NPRobotics Temporary Staff")
+                                Text("Intern at DSTA")
+                                Text("Intern at AbbVie")
+                            }
+                        } label: {
+                            Text("Previous Workplaces")
+                        }
                     }
                 } detail: {
                     Text("Select an item")
@@ -95,21 +111,6 @@ struct ContentView: View {
             Spacer(minLength: 0)
         }
         .padding(20)
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
     }
 }
 
