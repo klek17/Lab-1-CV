@@ -8,35 +8,52 @@
 import SwiftUI
 import SwiftData
 
+struct ProfileHeaderView: View {
+    let name: String
+    let role: String
+    
+    var body: some View {
+        VStack(alignment: .center, spacing: 0){
+            Image(.asdf).resizable().aspectRatio(contentMode: .fill).frame(width: 100, height: 100).clipShape(Circle())
+            Text(name).font(.largeTitle).bold()
+            Text(role).font(.title2)
+        }
+    }
+}
+
+struct ActionItemView: View {
+    let systemImage: String
+    let label: String
+    
+    var body: some View {
+        VStack(spacing: 6){
+            Image(systemName: systemImage).font(.title3)
+            Text(label).font(.caption)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        VStack(spacing: 16){
+            ProfileHeaderView(
+                name: "Kevin Lim",
+                role: "iOS Student"
+            )
+            
+            HStack(spacing: 24){
+                ActionItemView(systemImage: "message.fill", label: "Message")
+                ActionItemView(systemImage: "phone.fill", label: "Call")
+                ActionItemView(systemImage: "envelope.fill", label: "Email")
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
+            .padding(.top, 8)
+            Spacer(minLength: 0)
         }
+        .padding(20)
     }
 
     private func addItem() {
